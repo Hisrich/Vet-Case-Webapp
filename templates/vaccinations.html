@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Vaccination Schedule</title>
+    <link rel="icon" href="static/uploads/SVM.png" type="image/png">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1, h2 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        h2 {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 30px;
+        }
+        
+        .vaccine-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        
+        .vaccine-table th {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+            padding: 12px 15px;
+            text-align: left;
+        }
+        
+        .vaccine-table td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .vaccine-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        .vaccine-table tr:hover {
+            background-color: #e8f4fc;
+        }
+        
+        .core {
+            font-weight: bold;
+            color: #27ae60;
+        }
+        
+        .non-core {
+            color: #e67e22;
+        }
+        
+        .notes {
+            font-size: 0.9em;
+            color: #555;
+        }
+        
+        .animal-icon {
+            font-size: 24px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .vaccine-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Pet Vaccination Schedule</h1>
+    
+    <h2><span class="animal-icon">🐶</span> Dogs</h2>
+    <table class="vaccine-table">
+        <thead>
+            <tr>
+                <th>Age (Weeks)</th>
+                <th>Vaccine</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>6-8</td>
+                <td class="core">DHPP (Distemper, Hepatitis, Parvovirus, Parainfluenza)</td>
+                <td class="notes">Core vaccine; first dose. Often combined.</td>
+            </tr>
+            <tr>
+                <td>6-8</td>
+                <td class="non-core">Bordetella (Kennel Cough)</td>
+                <td class="notes">Non-core; recommended for social/boarding dogs.</td>
+            </tr>
+            <tr>
+                <td>10-12</td>
+                <td class="core">DHPP (2nd dose)</td>
+                <td class="notes">Booster shot.</td>
+            </tr>
+            <tr>
+                <td>12-16</td>
+                <td class="core">Rabies</td>
+                <td class="notes">Core; legally required in most regions.</td>
+            </tr>
+            <tr>
+                <td>12-16</td>
+                <td class="non-core">Leptospirosis (1st dose)</td>
+                <td class="notes">Non-core; for dogs in wet/high-risk areas.</td>
+            </tr>
+            <tr>
+                <td>14-16</td>
+                <td class="core">DHPP (3rd dose)</td>
+                <td class="notes">Final puppy shot.</td>
+            </tr>
+            <tr>
+                <td>14-16</td>
+                <td class="non-core">Leptospirosis (2nd dose)</td>
+                <td class="notes">Booster if needed.</td>
+            </tr>
+            <tr>
+                <td>16+</td>
+                <td class="non-core">Lyme Disease (1st dose)</td>
+                <td class="notes">Non-core; for tick-prone areas.</td>
+            </tr>
+            <tr>
+                <td>1 year later</td>
+                <td class="core">All boosters (DHPP, Rabies, etc.)</td>
+                <td class="notes">Follow-up boosters (frequency varies by vaccine).</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <h2><span class="animal-icon">🐱</span> Cats</h2>
+    <table class="vaccine-table">
+        <thead>
+            <tr>
+                <th>Age (Weeks)</th>
+                <th>Vaccine</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>6-8</td>
+                <td class="core">FVRCP (Panleukopenia, Herpesvirus, Calicivirus)</td>
+                <td class="notes">Core; first dose.</td>
+            </tr>
+            <tr>
+                <td>8-10</td>
+                <td class="non-core">FeLV (Feline Leukemia, 1st dose)</td>
+                <td class="notes">Non-core; for outdoor/multi-cat households.</td>
+            </tr>
+            <tr>
+                <td>10-12</td>
+                <td class="core">FVRCP (2nd dose)</td>
+                <td class="notes">Booster shot.</td>
+            </tr>
+            <tr>
+                <td>12-14</td>
+                <td class="non-core">FeLV (2nd dose)</td>
+                <td class="notes">Final kitten dose if at risk.</td>
+            </tr>
+            <tr>
+                <td>12-16</td>
+                <td class="core">Rabies</td>
+                <td class="notes">Core; legally required in many regions.</td>
+            </tr>
+            <tr>
+                <td>14-16</td>
+                <td class="core">FVRCP (3rd dose)</td>
+                <td class="notes">Final core kitten vaccine.</td>
+            </tr>
+            <tr>
+                <td>1 year later</td>
+                <td class="core">All boosters (FVRCP, Rabies, FeLV)</td>
+                <td class="notes">Follow-up boosters (frequency varies).</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <div style="margin-top: 30px; padding: 15px; background-color: #f8f9fa; border-radius: 5px;">
+        <h3 style="margin-top: 0;">General Notes:</h3>
+        <ul>
+            <li><strong>Core Vaccines</strong> (<span class="core">green</span>): Essential for all pets</li>
+            <li><strong>Non-Core Vaccines</strong> (<span class="non-core">orange</span>): Given based on lifestyle/risk</li>
+            <li>Puppies/kittens need vaccines every <strong>3-4 weeks until 16 weeks</strong> for full protection</li>
+        </ul>
+    </div>
+</body>
+</html>

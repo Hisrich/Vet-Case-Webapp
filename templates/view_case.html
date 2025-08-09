@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Case - {{ case.patient_name }}</title>
+    <link rel="icon" href="static/uploads/SVM.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3a86ff;
+            --secondary: #4cc9f0;
+            --accent: #ff7b25;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        
+        h1, h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .info-item {
+            margin-bottom: 15px;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            padding: 8px;
+            background: white;
+            border-radius: 4px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+            margin-right: 10px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Case Details: {{ case.patient_name }}</h1>
+        
+        <div class="section">
+            <h2>Patient Information</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Patient Name</div>
+                    <div class="info-value">{{ case.patient_name }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Species</div>
+                    <div class="info-value">{{ case.species|capitalize }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Breed</div>
+                    <div class="info-value">{{ case.breed or 'N/A' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Age</div>
+                    <div class="info-value">{{ case.age or 'N/A' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Gender</div>
+                    <div class="info-value">{{ case.gender|capitalize }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Owner Information</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Owner Name</div>
+                    <div class="info-value">{{ case.client_name }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Contact Number</div>
+                    <div class="info-value">{{ case.client_phone_number }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Email</div>
+                    <div class="info-value">{{ case.client_email }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Address</div>
+                    <div class="info-value">{{ case.client_location }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Medical Information</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Visit Date</div>
+                    <div class="info-value">{{ case.visit_date.strftime('%Y-%m-%d') }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Presenting Complaint</div>
+                    <div class="info-value">{{ case.presenting_complaint or 'N/A' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Diagnosis</div>
+                    <div class="info-value">{{ case.diagnosis or 'N/A' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Treatment Given</div>
+                    <div class="info-value">{{ case.treatment_given or 'N/A' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Prescriptions</div>
+                    <div class="info-value">{{ case.prescriptions or 'N/A' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Follow-up Required</div>
+                    <div class="info-value">{{ case.follow_up_required or 'N/A' }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Physical Examination</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Weight</div>
+                    <div class="info-value">{{ case.weight or 'N/A' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Temperature</div>
+                    <div class="info-value">{{ case.temperature or 'N/A' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Heart Rate</div>
+                    <div class="info-value">{{ case.heart_rate or 'N/A' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Capillary Refill Time</div>
+                    <div class="info-value">{{ case.crt or 'N/A' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Mucous Membrane</div>
+                    <div class="info-value">{{ case.mm or 'N/A' }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Exam Notes</div>
+                    <div class="info-value">{{ case.physicalExamNotes or 'N/A' }}</div>
+                </div>
+            </div>
+        </div>
+        
+        <a href="{{ url_for('list_cases') }}" class="btn btn-secondary">Back to Cases</a>
+        <a href="{{ url_for('edit_case', case_id=case.id) }}" class="btn btn-primary">Edit Case</a>
+    </div>
+</body>
+</html>

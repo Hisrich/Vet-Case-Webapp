@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KNUST Veterinary Hospital - New Patient Form</title>
+    <link rel="icon" href="static/uploads/SVM.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+</head>
+<body>
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <img src="static/uploads/SVM.png" alt="KNUST Vet Clinic Logo">
+                <h1>KNUST Veterinary Teaching Hospital</h1>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <div class="hero-content">
+                <h2>We Care for Your Pet's Health</h2>
+            </div>
+        </section>
+
+        <div class="form-container" id="form-start">
+            <div class="form-header">
+                <h3>New Patient Registration</h3>
+                <p>Please provide the following information about the pet and the owner</p>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Owner's Info</div>
+                </div>
+                <div class="progress-step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Pet's Info</div>
+                </div>
+                <div class="progress-step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Physical Examination</div>
+                </div>
+                <div class="progress-step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Diagnosis</div>
+                </div>
+                <div class="progress-step" data-step="5">
+                    <div class="step-number">5</div>
+                    <div class="step-label">Confirmation</div>
+                </div>
+            </div>
+
+            <form id="patientForm" action="{% if case %}{{ url_for('update_case', case_id=case.id) }}{% else %}{{ url_for('new_case') }}{% endif %}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                
+                <div class="form-step active" data-step="1">
+                    <div class="form-group">
+                        <label for="ownerName">Full Name</label>
+                        <div class="input-icon">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="ownerName" name="client_name" class="form-control" value="{% if case %}{{ case.ownerName }}{% endif %}" placeholder="John Doe" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ownerPhone">Phone Number</label>
+                            <div class="input-icon">
+                                <i class="fas fa-phone"></i>
+                                <input type="tel" id="ownerPhone" name="client_phone_number" class="form-control" value="{% if case %}{{ case.client_phone_number }}{% endif %}"placeholder="(123) 456-7890" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="ownerEmail">Email Address</label>
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="ownerEmail" name="client_email" class="form-control" value="{% if case %}{{ case.client_email }}{% endif %}"placeholder="john@example.com" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ownerAddress">Address</label>
+                        <div class="input-icon">
+                            <i class="fas fa-home"></i>
+                            <input type="text" id="ownerAddress" name="client_location" class="form-control" value="{% if case %}{{ case.client_location }}{% endif %}"placeholder="Town, City" required>
+                        </div>
+                    </div>
+
+                    <div class="form-navigation">
+                        <button type="button" class="btn btn-outline" disabled>Previous</button>
+                        <button type="button" class="btn btn-primary next-step">Next</button>
+                    </div>
+                </div>
+
+                <div class="form-step" data-step="2">
+                    <div class="pet-avatar">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjZmY3YjI1IiBkPSJNMjU2IDBDMTE0LjYgMCAwIDEwMC4zIDAgMjI0YzAgNzAuMSAzNi45IDEzMi42IDk0LjUgMTczLjdMMjU2IDUxMmwxNjEuNS0xMTQuM0M0NzUuMSAzNTYuNiA1MTIgMjk0LjEgNTEyIDIyNEM1MTIgMTAwLjMgMzk3LjQgMCAyNTYgMHoiLz48Y2lyY2xlIGZpbGw9IiM2NjYiIGN4PSIxNjAiIGN5PSIxNjAiIHI9IjMyIi8+PGNpcmNsZSBmaWxsPSIjNjY2IiBjeD0iMzUyIiBjeT0iMTYwIiByPSIzMiIvPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0yNTYgMzIwYy0zNS4zIDAtNjQtMjguNy02NC02NGgyNGMwIDIyLjEgMTcuOSA0MCA0MCA0aDcyLjJjLTEuOSAxMS40LTguMyAyMS44LTE3LjcgMjkuMWwtMTQuMiA5LjljLTEwLjIgNi44LTIyLjQgMTAuOS0zNS4xIDEwLjktMTIuNyAwLTI0LjktNC4xLTM1LjEtMTAuOWwtMTQuMi05LjlDNzIuMyAzMDEuOCA2NCAyODQuOSA2NCAyNjRjMC0zNS4zIDI4LjctNjQgNjQtNjRoMTI4YzM1LjMgMCA2NCAyOC43IDY0IDY0IDAgMjAuOS04LjMgMzcuOC0yMS4xIDQ5LjFsLTE0LjIgOS45Yy0xMC4yIDYuOC0yMi40IDEwLjktMzUuMSAxMC45eiIvPjwvc3ZnPg==" alt="Pet Avatar">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="petName">Pet's Name</label>
+                        <div class="input-icon">
+                            <i class="fas fa-paw"></i>
+                            <input type="text" id="petName" name="patient_name" class="form-control" value="{% if case %}{{ case.patient_name }}{% endif %}"placeholder="Buddy" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="petSpecies">Species</label>
+                            <select id="petSpecies" name="species" class="form-control" value="{% if case %}{{ case.species }}{% endif %}" required>
+                                <option value="" disabled selected>Select Species</option>
+                                <option value="dog">Dog</option>
+                                <option value="cat">Cat</option>
+                                <option value="bird">Bird</option>
+                                <option value="rabbit">Rabbit</option>
+                                <option value="reptile">Reptile</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="petBreed">Breed</label>
+                            <input type="text" id="petBreed" name="breed" class="form-control" value="{% if case %}{{ case.breed }}{% endif %}" placeholder="Golden Retriever">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="petAge">Age</label>
+                            <input type="text" id="petAge" name="age" class="form-control" value="{% if case %}{{ case.age }}{% endif %}"placeholder="3 years">
+                        </div>
+                        <div class="form-group">
+                            <label for="petGender">Gender</label>
+                            <select id="petGender" name="gender" class="form-control" value="{% if case %}{{ case.gender }}{% endif %}" required>
+                                <option value="" disabled selected>Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-navigation">
+                        <button type="button" class="btn btn-outline prev-step">Previous</button>
+                        <button type="button" class="btn btn-primary next-step">Next</button>
+                    </div>
+                </div>
+
+                <div class="form-step" data-step="3">
+                    <h4 style="margin-bottom: 20px; color: var(--primary);">Physical Examination</h4>
+                    
+                    <div class="vital-signs">
+                        <div class="form-group">
+                            <label for="weight">Weight (kg/lbs)</label>
+                            <div class="input-icon">
+                                <i class="fas fa-weight"></i>
+                                <input type="text" id="weight" name="weight" class="form-control" value="{% if case %}{{ case.weight }}{% endif %}"placeholder="0.0">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="temperature">Temperature (°F/°C)</label>
+                            <div class="input-icon">
+                                <i class="fas fa-thermometer-half"></i>
+                                <input type="text" id="temperature" name="temperature" class="form-control" value="{% if case %}{{ case.temperature }}{% endif %}"placeholder="00.0">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="heartRate">Heart Rate (bpm)</label>
+                            <div class="input-icon">
+                                <i class="fas fa-heartbeat"></i>
+                                <input type="text" id="heartRate" name="heart_rate" class="form-control" value="{% if case %}{{ case.heart_rate }}{% endif %}"placeholder="00">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="capillaryRefill">Capillary Refill Time (sec)</label>
+                            <input type="text" id="capillaryRefill" name="crt" class="form-control" value="{% if case %}{{ case.crt }}{% endif %}"placeholder="0-2">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="mucousMembrane">Mucous Membrane</label>
+                            <select id="mucousMembrane" name="mm" class="form-control" value="{% if case %}{{ case.mm }}{% endif %}">
+                                <option value="" selected>Select</option>
+                                <option value="pink">Pink</option>
+                                <option value="pale">Pale</option>
+                                <option value="cyanotic">Cyanotic</option>
+                                <option value="icteric">Icteric</option>
+                                <option value="hyperemic">Hyperemic</option>
+                                <option value="dry">Dry</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="physicalExamNotes">Examination Notes</label>
+                        <textarea id="physicalExamNotes" name="physicalExamNotes" class="form-control" value="{% if case %}{{ case.physicalExamNotes }}{% endif %}" rows="4" placeholder="General appearance, abnormalities, etc."></textarea>
+                    </div>
+
+                    <div class="form-navigation">
+                        <button type="button" class="btn btn-outline prev-step">Previous</button>
+                        <button type="button" class="btn btn-primary next-step">Next</button>
+                    </div>
+                </div>
+
+                <div class="form-step" data-step="4">
+                    <h4 style="margin-bottom: 20px; color: var(--primary);">Diagnosis & Treatment</h4>
+                    
+                    <div class="treatment-grid">
+                        <div>
+                            <div class="form-group">
+                                <label for="presentingComplaint">Presenting Complaint</label>
+                                <textarea id="presentingComplaint" name="presenting_complaint" class="form-control" value="{% if case %}{{ case.presenting_complaint }}{% endif %}" rows="3" placeholder="Owner's description of the problem" required></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="diagnosis">Diagnosis</label>
+                                <textarea id="diagnosis" name="diagnosis" class="form-control" value="{% if case %}{{ case.diagnosis }}{% endif %}" rows="3" placeholder="Clinical diagnosis"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="form-group">
+                                <label for="treatment">Treatment Given</label>
+                                <textarea id="treatment" name="treatment_given" class="form-control" value="{% if case %}{{ case.treatment_given }}{% endif %}" rows="3" placeholder="Procedures, medications administered"></textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="prescriptions">Prescriptions</label>
+                                <textarea id="prescriptions" name="prescriptions" class="form-control" value="{% if case %}{{ case.prescriptions }}{% endif %}" rows="3" placeholder="Medications prescribed"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="followUp">Follow-up Instructions</label>
+                        <textarea id="followUp" name="follow_up_required" class="form-control" value="{% if case %}{{ case.follow_up_required }}{% endif %}" rows="2" placeholder="Next steps for the owner"></textarea>
+                    </div>
+
+                    <div class="form-navigation">
+                        <button type="button" class="btn btn-outline prev-step">Previous</button>
+                        <button type="button" class="btn btn-primary next-step">Next</button>
+                    </div>
+                </div>
+
+                <div class="form-step" data-step="5">
+                    <div class="confirmation">
+                        <div id="reviewSection">
+                            <i class="fas fa-check-circle"></i>
+                            <h4>Please Review Your Information</h4>
+                            <p>Verify all details below before submitting the form.</p>
+                            
+                            <div class="review-section" style="text-align: left; margin: 30px auto; max-width: 800px; background: #f9f9f9; padding: 20px; border-radius: 8px;">
+                                <h5 style="color: var(--primary); border-bottom: 1px solid #eee; padding-bottom: 10px; margin-bottom: 15px;">Owner Information</h5>
+                                <p><strong>Name:</strong> <span id="review-ownerName"></span></p>
+                                <p><strong>Phone:</strong> <span id="review-ownerPhone"></span></p>
+                                <p><strong>Email:</strong> <span id="review-ownerEmail"></span></p>
+                                <p><strong>Address:</strong> <span id="review-ownerAddress"></span></p>
+                                
+                                <h5 style="color: var(--primary); border-bottom: 1px solid #eee; padding-bottom: 10px; margin: 20px 0 15px;">Pet Information</h5>
+                                <p><strong>Name:</strong> <span id="review-petName"></span></p>
+                                <p><strong>Species:</strong> <span id="review-petSpecies"></span></p>
+                                <p><strong>Breed:</strong> <span id="review-petBreed"></span></p>
+                                <p><strong>Age:</strong> <span id="review-petAge"></span></p>
+                                <p><strong>Gender:</strong> <span id="review-petGender"></span></p>
+                                
+                                <h5 style="color: var(--primary); border-bottom: 1px solid #eee; padding-bottom: 10px; margin: 20px 0 15px;">Physical Examination</h5>
+                                <p><strong>Weight:</strong> <span id="review-weight"></span></p>
+                                <p><strong>Temperature:</strong> <span id="review-temperature"></span></p>
+                                <p><strong>Heart Rate:</strong> <span id="review-heartRate"></span></p>
+                                <p><strong>Capillary Refill:</strong> <span id="review-capillaryRefill"></span></p>
+                                <p><strong>Mucous Membrane:</strong> <span id="review-mucousMembrane"></span></p>
+                                <p><strong>Exam Notes:</strong> <span id="review-physicalExamNotes"></span></p>
+                                
+                                <h5 style="color: var(--primary); border-bottom: 1px solid #eee; padding-bottom: 10px; margin: 20px 0 15px;">Diagnosis & Treatment</h5>
+                                <p><strong>Presenting Complaint:</strong> <span id="review-presentingComplaint"></span></p>
+                                <p><strong>Diagnosis:</strong> <span id="review-diagnosis"></span></p>
+                                <p><strong>Treatment Given:</strong> <span id="review-treatment"></span></p>
+                                <p><strong>Prescriptions:</strong> <span id="review-prescriptions"></span></p>
+                                <p><strong>Follow-up Instructions:</strong> <span id="review-followUp"></span></p>
+                            </div>
+
+                            <div class="form-navigation">
+                                <button type="button" class="btn btn-outline prev-step">Previous</button>
+                                <button type="submit" id="completeRegistration" class="btn btn-accent">CONFIRM</button>
+                            </div>
+                        </div>
+
+                        <div id="successMessage" style="display: none; text-align: center; margin-top: 50px;">
+                            <i class="fas fa-check-circle" style="font-size: 5rem; color: var(--success); margin-bottom: 20px;"></i>
+                            <h4 style="font-size: 1.8rem; margin-bottom: 15px; color: var(--success);">Case Added Successfully!</h4>
+                            <p style="margin-bottom: 30px; font-size: 1.1rem;">Pet's case has been registered successfully.</p>
+                            <button type="button" class="btn btn-primary" onclick="resetForm()">Add Another Case</button>
+                            <button type="button" class="btn btn-primary" onclick="window.location.href='/'">Back To Home</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer style="background-color: var(--dark); color: white; padding: 40px 0; text-align: center;">
+        <div class="container">
+            <p>© 2025 KNUST Veterinary Teaching Hospital. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
