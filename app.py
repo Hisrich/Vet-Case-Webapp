@@ -10,8 +10,9 @@ load_dotenv()
 app = Flask(__name__)
 
 API_TOKEN = os.getenv("API_TOKEN")
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:9184@localhost:5432/vcfdatabase'
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = API_TOKEN
 app.config['WTF_CSRF_ENABLED'] = True
