@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const submitBtn = document.getElementById('completeRegistration');
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin fa-sm"></i> Processing...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin style="font-size: 0.9em; margin-right: 8px;"></i> Processing...';
 
             const response = await fetch("/new_case", {
                 method: 'POST',
