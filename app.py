@@ -79,7 +79,7 @@ def list_cases():
 
     if search_query:
         cases = Case.query.filter(
-            db.get_or_404(
+            db.or_(
                 Case.id.like(f"%{search_query}%"),
                 Case.patient_name.like(f"%{search_query}%"),
                 Case.client_name.like(f"%{search_query}%")
