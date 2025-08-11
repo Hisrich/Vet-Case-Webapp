@@ -46,6 +46,7 @@ def new_case():
                 heart_rate=data.get("heart_rate"),
                 crt=data.get("crt"),
                 mm=data.get("mm"),
+                neutering_status = data.get("neutering_status"),
                 visit_date=datetime.now(),
                 physicalExamNotes=data.get("physicalExamNotes", ""),
                 presenting_complaint=data.get("presenting_complaint", ""),

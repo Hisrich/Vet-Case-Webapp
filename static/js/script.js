@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
             heart_rate: document.getElementById('heartRate').value,
             crt: document.getElementById('capillaryRefill').value,
             mm: document.getElementById('mucousMembrane').value,
+            neutering_status: document.getElementById('neutering_status').value,
             physicalExamNotes: document.getElementById('physicalExamNotes').value,
             presenting_complaint: document.getElementById('presentingComplaint').value,
             diagnosis: document.getElementById('diagnosis').value,
@@ -165,6 +166,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('review-heartRate').textContent = document.getElementById('heartRate').value || 'N/A';
         document.getElementById('review-capillaryRefill').textContent = document.getElementById('capillaryRefill').value || 'N/A';
         document.getElementById('review-mucousMembrane').textContent = document.getElementById('mucousMembrane').value || 'N/A';
+        document.getElementById('review-neutering_status').textContent = document.getElementById('neutering_status').value || 'N/A';
         document.getElementById('review-physicalExamNotes').textContent = document.getElementById('physicalExamNotes').value || 'N/A';
         
         document.getElementById('review-presentingComplaint').textContent = document.getElementById('presentingComplaint').value || 'N/A';

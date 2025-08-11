@@ -197,6 +197,17 @@
                             </select>
                         </div>
                     </div>
+
+                    <div class="form-group">
+                            <label for="neutering_status">Neutering Status</label>
+                            <select id="neutering_status" name="neutering_status" class="form-control" value="{% if case %}{{ case.neutering_status }}{% endif %}">
+                                <option value="" selected>Select</option>
+                                <option value="spayed">Spayed</option>
+                                <option value="neutered">Neutered</option>
+                                <option value="spayed">Spayed</option>
+                            </select>
+                        </div>
+                    </div>
                     
                     <div class="form-group">
                         <label for="physicalExamNotes">Examination Notes</label>

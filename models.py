@@ -19,6 +19,7 @@ class Case(db.Model):
     heart_rate = db.Column(db.Integer)
     crt = db.Column(db.String(50))
     mm = db.Column(db.String(50))
+    neutering_status = db.Column(db.String(50))
     visit_date = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
     physicalExamNotes = db.Column(db.String(250))
     presenting_complaint = db.Column(db.String(250))
