@@ -75,8 +75,20 @@ def new_case():
 
 @app.route("/cases")
 def list_cases():
-    cases = Case.query.all()
-    return render_template("cases.html", cases=cases)
+    search_query = request.args.get("search", "").strip()
+
+    if search_query:
+        cases = Case.query.filter(
+            db.get_or_404(
+                Case.id.like(f"%{search_query}%"),
+                Case.patient_name.like(f"%{search_query}%"),
+                Case.client_name.like(f"%{search_query}%")
+            )
+        ).all()
+    else:
+        cases = Case.query.all()
+
+    return render_template("cases.html", cases=cases, search_query=search_query)
 
 @app.route("/case/<int:case_id>")
 def view_case(case_id):

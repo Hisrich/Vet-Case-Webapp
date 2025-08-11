@@ -181,6 +181,33 @@
             text-align: center;
         }
 
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        .search-container input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(58, 134, 255, 0.2);
+        }
+
+        .action-btn.delete-btn {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .action-btn.delete-btn:hover {
+            background-color: #c82333;
+            transform: scale(1.05);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            color: var(--danger);
+            font-style: italic;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             th, td {
@@ -216,6 +243,23 @@
 
     <main class="container">
         <h1 class="page-title">Patient Case Records</h1>
+
+        <div class="search-container" style="margin-bottom: 20px; display: flex; justify-content: center;">
+            <form action="{{ url_for('list_cases') }}" method="get" style="width: 100%; max-width: 500px;">
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" name="search" placeholder="Search by ID, pet name or owner name..." 
+                        value="{{ search_query }}" style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                    <button type="submit" style="padding: 10px 20px; background-color: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    <i class="fas fa-search"></i> Search
+                    </button>
+                    {% if search_query %}
+                    <a href="{{ url_for('list_cases') }}" style="padding: 10px; background-color: var(--danger); color: white; border: none; border-radius: 4px; text-decoration: none; display: flex; align-items: center;">
+                        <i class="fas fa-times"></i> Clear
+                    </a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
         
         <div class="cases-container">
             <table>
@@ -230,29 +274,36 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
+                
                 <tbody>
-                    {% for case in cases %}
-                    <tr>
-                        <td>{{ case.id }}</td>
-                        <td>{{ case.patient_name }}</td>
-                        <td>{{ case.client_name }}</td>
-                        <td>{{ case.species|capitalize }}</td>
-                        <td>{{ case.visit_date.strftime('%Y-%m-%d') }}</td>
-                        <td>
-                            <span class="status status-active">Active</span>
-                        </td>
-                        <td>
-                            <div class="action-buttons">
-                                <a href="{{ url_for('view_case', case_id=case.id) }}" class="action-btn view-btn">
-                                    <i class="fas fa-eye"></i>
-                                </a>
-                                <a href="{{ url_for('edit_case', case_id=case.id) }}" class="action-btn edit-btn">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
+                    {% if cases %}
+                        {% for case in cases %}
+                        <tr>
+                            <td>{{ case.id }}</td>
+                            <td>{{ case.patient_name }}</td>
+                            <td>{{ case.client_name }}</td>
+                            <td>{{ case.species|capitalize }}</td>
+                            <td>{{ case.visit_date.strftime('%Y-%m-%d') }}</td>
+                            <td>
+                                <span class="status status-active">Active</span>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <a href="{{ url_for('view_case', case_id=case.id) }}" class="action-btn view-btn">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ url_for('edit_case', case_id=case.id) }}" class="action-btn edit-btn">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="no-results">No cases found matching your search criteria.</td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table>
         </div>
