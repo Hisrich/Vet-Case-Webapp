@@ -75,19 +75,28 @@ def new_case():
 
 @app.route("/cases")
 def list_cases():
-    search_query = request.args.get("search", "").strip()
-
+    search_query = request.args.get('search', '').strip()
+    
     if search_query:
-        cases = Case.query.filter(
-            db.or_(
-                Case.id.like(f"%{search_query}%"),
-                Case.patient_name.like(f"%{search_query}%"),
-                Case.client_name.like(f"%{search_query}%")
-            )
-        ).all()
+        # Build the query conditions
+        conditions = []
+        
+        # Add text search conditions for name fields
+        text_search = f"%{search_query}%"
+        conditions.extend([
+            Case.patient_name.ilike(text_search),
+            Case.client_name.ilike(text_search)
+        ])
+        
+        # Add numeric ID condition only if search_query is numeric
+        if search_query.isdigit():
+            conditions.append(Case.id == int(search_query))
+        
+        # Apply all conditions with OR
+        cases = Case.query.filter(db.or_(*conditions)).all()
     else:
-        cases = Case.query.all()
-
+        cases = Case.query.order_by(Case.visit_date.desc()).all()
+        
     return render_template("cases.html", cases=cases, search_query=search_query)
 
 @app.route("/case/<int:case_id>")
