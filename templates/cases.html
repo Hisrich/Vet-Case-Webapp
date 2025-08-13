@@ -173,7 +173,30 @@
             transform: scale(1.05);
         }  
 
-        /* Footer */
+        .home-btn-box {
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        .btn-secondary {
+            background-color: #3a86ff;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(58, 134, 255, 0.2);
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background-color: #2667d6;
+            box-shadow: 0 3px 6px rgba(58, 134, 255, 0.3);
+            transform: translateY(-1px);
+        }
+
         footer {
             background-color: var(--dark);
             color: white;
@@ -208,12 +231,6 @@
             font-style: italic;
         }
 
-        .btn-secondary {
-            background-color: #3a86ff;
-            color: white;
-        }
-
-        /* Responsive Design */
         @media (max-width: 768px) {
             th, td {
                 padding: 8px 10px;
@@ -312,7 +329,7 @@
                 </tbody>
             </table>
         </div>
-        <div>
+        <div class="home-btn-box">
             <a href="{{ url_for('home') }}" class="btn btn-secondary">Back to Home</a>
         </div>
     </main>
