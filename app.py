@@ -1,10 +1,15 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 from flask_migrate import Migrate
 from models import Case, db
 from datetime import datetime
 from dotenv import load_dotenv
 import os
 from flask_wtf.csrf import CSRFProtect
+from google import genai
+from google.genai import types
+import logging
+import time
+
 
 load_dotenv()
 app = Flask(__name__)
@@ -16,6 +21,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = API_TOKEN
 app.config['WTF_CSRF_ENABLED'] = True
+client = genai.Client()
 
 db.init_app(app)
 migrate = Migrate(app, db)
@@ -24,6 +30,7 @@ csrf = CSRFProtect(app)
 @app.route("/")
 def home():
     return render_template("home.html")
+
 
 @app.route("/new_case", methods=["GET", "POST"])
 def new_case():
@@ -46,7 +53,7 @@ def new_case():
                 heart_rate=data.get("heart_rate"),
                 crt=data.get("crt"),
                 mm=data.get("mm"),
-                neutering_status = data.get("neutering_status"),
+                neutering_status=data.get("neutering_status"),
                 visit_date=datetime.now(),
                 physicalExamNotes=data.get("physicalExamNotes", ""),
                 presenting_complaint=data.get("presenting_complaint", ""),
@@ -73,43 +80,43 @@ def new_case():
     
     return render_template("patient.html")
 
+
 @app.route("/cases")
 def list_cases():
     search_query = request.args.get('search', '').strip()
     
     if search_query:
-        # Build the query conditions
         conditions = []
         
-        # Add text search conditions for name fields
         text_search = f"%{search_query}%"
         conditions.extend([
             Case.patient_name.ilike(text_search),
             Case.client_name.ilike(text_search)
         ])
         
-        # Add numeric ID condition only if search_query is numeric
         if search_query.isdigit():
             conditions.append(Case.id == int(search_query))
         
-        # Apply all conditions with OR
         cases = Case.query.filter(db.or_(*conditions)).all()
     else:
         cases = Case.query.order_by(Case.visit_date.desc()).all()
         
     return render_template("cases.html", cases=cases, search_query=search_query)
 
+
 @app.route("/case/<int:case_id>")
 def view_case(case_id):
     case = Case.query.get_or_404(case_id)
     return render_template("view_case.html", case=case)
+
 
 @app.route("/case/<int:case_id>/edit")
 def edit_case(case_id):
     case = Case.query.get_or_404(case_id)
     return render_template("patient.html", case=case)
 
-@app.route("/case/<int:case_id>/update", methods = ["POST"])
+
+@app.route("/case/<int:case_id>/update", methods=["POST"])
 def update_case(case_id):
     case = Case.query.get_or_404(case_id)
 
@@ -150,18 +157,87 @@ def update_case(case_id):
             "success": False,
             "message": str(e)
         }), 500
-    
-@app.route('/animal-care')
-def animal_care():
-    return render_template('animal_care.html')
+
+
+logger = logging.getLogger(__name__)
+@app.route("/smartvet", methods=["GET", "POST"])
+def smart_vet():
+    try:
+        if request.method == "POST":
+            if not request.is_json:
+                return jsonify({'error': 'Content-Type must be application/json'}), 415
+            
+            data = request.get_json()
+            
+            if not data:
+                return jsonify({'error': 'Request body must be JSON'}), 400
+            if 'prompt' not in data or not isinstance(data['prompt'], str):
+                return jsonify({'error': 'Prompt must be a string'}), 400
+            if not data['prompt'].strip():
+                return jsonify({'error': 'Prompt cannot be empty'}), 400
+            
+            try:
+                config = types.GenerateContentConfig(
+                    system_instruction="Always start with the statement 'SmartVet! Reporting for duty!'. You are a veterinary doctor, give drugs and possible diagnosis if necessary, provide accurate veterinary information, always recommend professional consultation, never diagnose - suggest possibilities, highlight emergency symptoms, keep response under 300 words, keep the previous message in your memory so you can tailor your respond to that, resmove asterisk in your response",
+                    temperature=0.7,
+                    max_output_tokens=1000
+                )
+                response = client.models.generate_content(
+                    model="gemini-2.5-flash",
+                    contents=[{"role": "user", "parts": [{"text": data['prompt']}]}],
+                    config=config
+                )
+                
+                if not response.text:
+                    raise ValueError("Empty response from model")
+                
+                return jsonify({
+                    'success': True,
+                    'response': response.text,
+                    'model': "gemini-2.5-flash",
+                    'usage': {
+                        'prompt_tokens': len(data['prompt'].split()),
+                        'completion_tokens': len(response.text.split())
+                    }
+                })
+                
+            except Exception as e:
+                logger.error(f"Model generation error: {str(e)}")
+                return jsonify({
+                    'success': False,
+                    'error': 'Failed to generate response',
+                    'details': str(e)
+                }), 500
+                
+        return render_template("smartvet.html")
+        
+    except Exception as e:
+        logger.error(f"Unexpected error: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': 'Internal server error'
+        }), 500
+
+
+@app.route("/smartvet/reset", methods=["POST"])
+def reset_chat():
+    try:
+        session.pop("chat_history", None)
+        return jsonify({"success": True})
+    except Exception as e:
+        logger.error(f"Reset error: {str(e)}")
+        return jsonify({"success": False, "error": str(e)}), 500
+
 
 @app.route('/pet-wellness')
 def pet_wellness():
     return render_template('pet_wellness.html')
 
+
 @app.route('/vaccinations')
 def vaccinations():
     return render_template('vaccinations.html')
+
 
 if __name__ == "__main__":
     app.run(debug=True)
